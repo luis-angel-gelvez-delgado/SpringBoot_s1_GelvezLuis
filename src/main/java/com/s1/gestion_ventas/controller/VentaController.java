@@ -4,10 +4,12 @@ import com.s1.gestion_ventas.dto.request.VentaRequestDTO;
 import com.s1.gestion_ventas.dto.response.VentaResponseDTO;
 import com.s1.gestion_ventas.service.impl.VentaServiceImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/venta")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "Ventas", description = "API para la gestion de ventas del sistema")
 public class VentaController {
 
@@ -37,7 +40,7 @@ public class VentaController {
     })
     @PostMapping
     public ResponseEntity<VentaResponseDTO> guardar(
-            @RequestBody VentaRequestDTO dto) {
+            @Valid @RequestBody VentaRequestDTO dto) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -55,7 +58,7 @@ public class VentaController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<VentaResponseDTO> actualizar(
-            @RequestBody VentaRequestDTO dto,
+            @Valid @RequestBody VentaRequestDTO dto,
             @Parameter(description = "ID de la venta a actualizar", example = "1")
             @PathVariable Long id) {
 

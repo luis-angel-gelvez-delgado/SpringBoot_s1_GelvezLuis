@@ -4,10 +4,12 @@ import com.s1.gestion_ventas.dto.request.ProductoRequestDTO;
 import com.s1.gestion_ventas.dto.response.ProductoResponseDTO;
 import com.s1.gestion_ventas.service.impl.ProductoServiceImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/producto")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "Productos", description = "API para la gestion de productos del sistema")
 public class ProductoController {
 
@@ -36,7 +39,7 @@ public class ProductoController {
     })
     @PostMapping
     public ResponseEntity<ProductoResponseDTO> guardar(
-            @RequestBody ProductoRequestDTO dto) {
+            @Valid @RequestBody ProductoRequestDTO dto) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -54,7 +57,7 @@ public class ProductoController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<ProductoResponseDTO> actualizar(
-            @RequestBody ProductoRequestDTO dto,
+            @Valid @RequestBody ProductoRequestDTO dto,
             @Parameter(description = "ID del producto a actualizar", example = "1")
             @PathVariable Long id) {
 

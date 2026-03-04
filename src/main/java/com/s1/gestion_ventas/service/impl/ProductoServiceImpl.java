@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class ProductoServiceImpl implements ProductoService {
@@ -26,7 +28,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public ProductoResponseDTO actualizarProducto(ProductoRequestDTO dto, Long id) {
         Producto p = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el producto a actualizar"));
+                .orElseThrow(() -> new EntityNotFoundException("No existe el producto a actualizar"));
         productoMapper.actualizarEntidadDesdeDTO(p, dto);
         Producto actualizado = productoRepository.save(p);
         return productoMapper.entidadADTO(actualizado);
@@ -35,7 +37,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public void eliminarProducto(Long id) {
         Producto p = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el producto a eliminar"));
+                .orElseThrow(() -> new EntityNotFoundException("No existe el producto a eliminar"));
         productoRepository.delete(p);
     }
 
@@ -48,7 +50,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public ProductoResponseDTO buscarPorId(Long id) {
         Producto p = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el producto"));
+                .orElseThrow(() -> new EntityNotFoundException("No existe el producto"));
         return productoMapper.entidadADTO(p);
     }
 }

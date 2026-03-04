@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class VentaServiceImpl implements VentaService {
@@ -44,7 +46,7 @@ public class VentaServiceImpl implements VentaService {
 
         for (var detalleDTO : dto.detalles()) {
             Producto producto = productoRepository.findById(detalleDTO.productoId())
-                    .orElseThrow(() -> new RuntimeException("No existe el producto"));
+                    .orElseThrow(() -> new EntityNotFoundException("No existe el producto"));
             DetalleVenta detalle = detalleVentaMapper.crearEntidad(
                     detalleDTO.cantidad(), producto, ventaGuardada
             );
@@ -71,7 +73,7 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public void eliminarVenta(Long id) {
         Venta v = ventaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe la venta a eliminar"));
+                .orElseThrow(() -> new EntityNotFoundException("No existe la venta a eliminar"));
         ventaRepository.delete(v);
     }
 
@@ -91,7 +93,7 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public VentaResponseDTO buscarPorId(Long id) {
         Venta venta = ventaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe la venta"));
+                .orElseThrow(() -> new EntityNotFoundException("No existe la venta"));
         List<DetalleVentaResponseDTO> detallesDTO = detalleVentaRepository
                 .findByVentaId(venta.getId())
                 .stream()
