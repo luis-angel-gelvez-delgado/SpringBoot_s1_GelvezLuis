@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion Ventas - Panel</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h2>Gestión de Productos</h2>
+
+<h3>Listar todos los productos</h3>
+<button onclick="listarProductos()">Buscar</button>
+
+<h3>Buscar producto por ID</h3>
+<input type="number" id="getProductoId" placeholder="ID">
+<button onclick="getProductoById()">Consultar</button>
+
+<h3>Crear Producto (POST)</h3>
+<input type="text" id="postNombre" placeholder="Nombre">
+<input type="text" id="postDescripcion" placeholder="Descripción">
+<input type="number" id="postPrecio" placeholder="Precio">
+<input type="number" id="postStock" placeholder="Stock">
+<button onclick="crearProducto()">Crear</button>
+
+<h3>Actualizar Producto (PUT)</h3>
+<input type="number" id="putId" placeholder="ID">
+<input type="text" id="putNombre" placeholder="Nuevo Nombre">
+<input type="text" id="putDescripcion" placeholder="Nueva Descripción">
+<input type="number" id="putPrecio" placeholder="Nuevo Precio">
+<input type="number" id="putStock" placeholder="Nuevo Stock">
+<button onclick="actualizarProducto()">Actualizar</button>
+
+<h3>Eliminar Producto (DELETE)</h3>
+<input type="number" id="deleteId" placeholder="ID">
+<button onclick="eliminarProducto()">Eliminar</button>
+
+<hr>
+<h2>Gestión de Ventas</h2>
+
+<h3>Listar todas las ventas</h3>
+<button onclick="listarVentas()">Buscar</button>
+
+<h3>Buscar venta por ID</h3>
+<input type="number" id="getVentaId" placeholder="ID">
+<button onclick="getVentaById()">Consultar</button>
+
+<h3>Crear Venta (POST)</h3>
+<p>Formato: productoId,cantidad (uno por línea)</p>
+<textarea id="detallesVenta" rows="4" placeholder="1,2&#10;2,3"></textarea>
+<button onclick="crearVenta()">Crear Venta</button>
+
+<hr>
+<pre id="resultado"></pre>
+
+<script>
+    function apiFetch(url, options = {}) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Debes iniciar sesión primero");
+            window.location.href = "/index.html";
+            return Promise.reject("No token");
+        }
+        return fetch(url, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+                ...options.headers
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                localStorage.removeItem("token");
+                throw new Error("Sesión expirada");
+            }
+            if (response.status === 204) return null;
+            if (!response.ok) throw new Error("Error en la petición");
+            return response.json();
+        });
+    }
+
+    function mostrar(data) {
+        document.getElementById("resultado").textContent =
+            JSON.stringify(data, null, 2);
+    }
+
+    function listarProductos() {
+        apiFetch("http://localhost:8080/api/producto")
+            .then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function getProductoById() {
+        const id = document.getElementById("getProductoId").value;
+        apiFetch(`http://localhost:8080/api/producto/${id}`)
+            .then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function crearProducto() {
+        const body = {
+            nombre: document.getElementById("postNombre").value,
+            descripcion: document.getElementById("postDescripcion").value,
+            precio: parseFloat(document.getElementById("postPrecio").value),
+            stock: parseInt(document.getElementById("postStock").value)
+        };
+        apiFetch("http://localhost:8080/api/producto", {
+            method: "POST", body: JSON.stringify(body)
+        }).then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function actualizarProducto() {
+        const id = document.getElementById("putId").value;
+        const body = {
+            nombre: document.getElementById("putNombre").value,
+            descripcion: document.getElementById("putDescripcion").value,
+            precio: parseFloat(document.getElementById("putPrecio").value),
+            stock: parseInt(document.getElementById("putStock").value)
+        };
+        apiFetch(`http://localhost:8080/api/producto/${id}`, {
+            method: "PUT", body: JSON.stringify(body)
+        }).then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function eliminarProducto() {
+        const id = document.getElementById("deleteId").value;
+        apiFetch(`http://localhost:8080/api/producto/${id}`, { method: "DELETE" })
+            .then(() => mostrar("Producto eliminado correctamente"))
+            .catch(error => alert(error));
+    }
+
+    function listarVentas() {
+        apiFetch("http://localhost:8080/api/venta")
+            .then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function getVentaById() {
+        const id = document.getElementById("getVentaId").value;
+        apiFetch(`http://localhost:8080/api/venta/${id}`)
+            .then(data => mostrar(data)).catch(error => alert(error));
+    }
+
+    function crearVenta() {
+        const lineas = document.getElementById("detallesVenta").value.trim().split("\n");
+        const detalles = lineas.map(linea => {
+            const partes = linea.split(",");
+            return {
+                productoId: parseInt(partes[0]),
+                cantidad: parseInt(partes[1])
+            };
+        });
+        apiFetch("http://localhost:8080/api/venta", {
+            method: "POST", body: JSON.stringify({ detalles })
+        }).then(data => mostrar(data)).catch(error => alert(error));
+    }
+</script>
+</body>
+</html>

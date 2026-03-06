@@ -4,6 +4,7 @@ import com.s1.gestion_ventas.config.JwtService;
 import com.s1.gestion_ventas.exception.BusinessRuleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -12,10 +13,11 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
-        if (username.equals("admin") && password.equals("1234")) {
-            return jwtService.generateToken(username);
+    public Map<String, String> login(@RequestBody LoginRequest request) {
+        if (request.username().equals("admin") && request.password().equals("1234")) {
+            String token = jwtService.generateToken(request.username());
+            return Map.of("token", token);
         }
-        throw new BusinessRuleException("Credenciales invalidas");
+        throw new BusinessRuleException("Credenciales inválidas");
     }
 }

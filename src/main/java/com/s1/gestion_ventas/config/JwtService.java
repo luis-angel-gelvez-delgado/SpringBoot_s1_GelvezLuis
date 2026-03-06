@@ -9,7 +9,7 @@ import java.util.Date;
 @Service
 public class JwtService {
     private final String SECRET = "clave_super_secreta_para_clase_2026_segura";
-    private final long EXPIRATION = 1000 * 60 * 30;
+    private final long EXPIRATION = 1000 * 60 * 60 * 24;
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
