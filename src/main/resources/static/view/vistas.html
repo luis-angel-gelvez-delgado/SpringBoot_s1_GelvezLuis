@@ -35,7 +35,7 @@
 <button onclick="eliminarProducto()">Eliminar</button>
 
 <hr>
-<h2>Gestión de Ventas</h2>
+<h2>Gestion de Ventas</h2>
 
 <h3>Listar todas las ventas</h3>
 <button onclick="listarVentas()">Buscar</button>
@@ -85,13 +85,13 @@
     }
 
     function listarProductos() {
-        apiFetch("http://localhost:8080/api/producto")
+        apiFetch("http://10.148.87.217:8080/api/producto")
             .then(data => mostrar(data)).catch(error => alert(error));
     }
 
     function getProductoById() {
         const id = document.getElementById("getProductoId").value;
-        apiFetch(`http://localhost:8080/api/producto/${id}`)
+        apiFetch(`http://10.148.87.217:8080/api/producto/${id}`)
             .then(data => mostrar(data)).catch(error => alert(error));
     }
 
@@ -102,7 +102,7 @@
             precio: parseFloat(document.getElementById("postPrecio").value),
             stock: parseInt(document.getElementById("postStock").value)
         };
-        apiFetch("http://localhost:8080/api/producto", {
+        apiFetch("http://10.148.87.217:8080/api/producto", {
             method: "POST", body: JSON.stringify(body)
         }).then(data => mostrar(data)).catch(error => alert(error));
     }
@@ -115,26 +115,26 @@
             precio: parseFloat(document.getElementById("putPrecio").value),
             stock: parseInt(document.getElementById("putStock").value)
         };
-        apiFetch(`http://localhost:8080/api/producto/${id}`, {
+        apiFetch(`http://10.148.87.217:8080/api/producto/${id}`, {
             method: "PUT", body: JSON.stringify(body)
         }).then(data => mostrar(data)).catch(error => alert(error));
     }
 
     function eliminarProducto() {
         const id = document.getElementById("deleteId").value;
-        apiFetch(`http://localhost:8080/api/producto/${id}`, { method: "DELETE" })
+        apiFetch(`http://10.148.87.217:8080/api/producto/${id}`, { method: "DELETE" })
             .then(() => mostrar("Producto eliminado correctamente"))
             .catch(error => alert(error));
     }
 
     function listarVentas() {
-        apiFetch("http://localhost:8080/api/venta")
+        apiFetch("http://10.148.87.217:8080/api/venta")
             .then(data => mostrar(data)).catch(error => alert(error));
     }
 
     function getVentaById() {
         const id = document.getElementById("getVentaId").value;
-        apiFetch(`http://localhost:8080/api/venta/${id}`)
+        apiFetch(`http://10.148.87.217:8080/api/venta/${id}`)
             .then(data => mostrar(data)).catch(error => alert(error));
     }
 
@@ -147,7 +147,7 @@
                 cantidad: parseInt(partes[1])
             };
         });
-        apiFetch("http://localhost:8080/api/venta", {
+        apiFetch("http://10.148.87.217:8080/api/venta", {
             method: "POST", body: JSON.stringify({ detalles })
         }).then(data => mostrar(data)).catch(error => alert(error));
     }
