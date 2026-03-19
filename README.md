@@ -1,3 +1,19 @@
+## Documentacion
+
+<a href="https://docs.google.com/document/d/1JkhDNbItAxBbVtyZbTw9DGZ1tNf_hTuK/edit" target="_blank">
+  <img src="https://img.shields.io/badge/DOCUMENTACION-Google%20Drive-34A853?style=for-the-badge&logo=google-drive&logoColor=white" alt="Documento Drive">
+</a>
+
+<br><br>
+
+Aquí se encuentra la sustentación del proyecto **PIZZERIA** desarrollado con **MySQL**, donde se explica el modelado, la implementación y las funcionalidades clave de la base de datos.
+
+
+<br>
+
+---
+
+
 # Gestión de Ventas — API REST con Spring Boot
 
 **Autor:** Luis Ángel Gelvez Delgado
